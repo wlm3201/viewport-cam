@@ -1,18 +1,22 @@
+
 apply plugin: 'java'
 apply plugin: 'net.fabricmc.fabric-loom'
 apply plugin: 'maven-publish'
 
+def modId = rootProject.property('mod_id') as String
+
+group = rootProject.group
 version = rootProject.version
 
 base {
-	archivesName = "${rootProject.name}-mc${project.ext.minecraftVersion}"
+	archivesName = "${modId}-${project.minecraft_version}"
 }
 
 loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"viewportcam" {
+		create(modId) {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}
@@ -21,53 +25,59 @@ loom {
 
 repositories {
 	maven {
-		name = 'Xander Maven'
+		name = 'Terraformers'
+		url = 'https://maven.terraformersmc.com/'
+	}
+	maven {
+		name = 'Xander'
 		url = 'https://maven.isxander.dev/releases'
 	}
 	maven {
-		name = 'TerraformersMC'
-		url = 'https://maven.terraformersmc.com/releases'
+		name = 'Modrinth'
+		url = 'https://api.modrinth.com/maven'
+		content { includeGroup 'maven.modrinth' }
 	}
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.ext.minecraftVersion}"
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	implementation "net.fabricmc:fabric-loader:${rootProject.property('loader_version')}"
 
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.ext.fabricApiVersion}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	compileOnly "dev.isxander:yet-another-config-lib:${project.ext.yaclVersion}"
-	compileOnly "com.terraformersmc:modmenu:${project.ext.modmenuVersion}"
-	localRuntime "dev.isxander:yet-another-config-lib:${project.ext.yaclVersion}"
-	localRuntime "com.terraformersmc:modmenu:${project.ext.modmenuVersion}"
+	compileOnly "dev.isxander:yet-another-config-lib:${project.yacl_version}"
+	compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+	localRuntime "dev.isxander:yet-another-config-lib:${project.yacl_version}"
+	localRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 
 sourceSets {
 	main {
-		java.srcDirs = ["${rootDir}/src/main/java"]
-		resources.srcDirs = ["${rootDir}/src/main/resources"]
+		java.srcDirs = [rootProject.file('src/main/java'), file('src/main/java')]
+		resources.srcDirs = [rootProject.file('src/main/resources'), file('src/main/resources')]
 	}
 	client {
-		java.srcDirs = ["${rootDir}/src/client/java", "${projectDir}/src/client/java"]
-		resources.srcDirs = ["${rootDir}/src/client/resources", "${projectDir}/src/client/resources"]
+		java.srcDirs = [rootProject.file('src/client/java'), file('src/client/java')]
+		resources.srcDirs = [rootProject.file('src/client/resources'), file('src/client/resources')]
 	}
 }
 
-def projectVersion = project.version
-def minecraftDep = project.ext.minecraftDependency
+def modVersion = project.version.toString()
+def minecraftDependency = project.property('minecraft_dependency') as String
 
 processResources {
-	inputs.property "version", projectVersion
-	inputs.property "minecraft_dependency", minecraftDep
+	inputs.property 'version', modVersion
+	inputs.property 'minecraft_dependency', minecraftDependency
 
-	filesMatching("fabric.mod.json") {
-		expand "version": projectVersion, "minecraft_dependency": minecraftDep
+	filesMatching('fabric.mod.json') {
+		expand 'version': modVersion, 'minecraft_dependency': minecraftDependency
 	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 25
 	it.options.encoding = 'UTF-8'
+	it.options.release = 25
 }
 
 java {
@@ -78,21 +88,16 @@ java {
 }
 
 jar {
-	def projectName = rootProject.name
-	inputs.property "projectName", projectName
-
-	from("${rootDir}/LICENSE") {
-		rename { "${it}_$projectName"}
+	from(rootProject.file('LICENSE')) {
+		rename { "${it}_${modId}" }
 	}
 }
 
 publishing {
 	publications {
-		create("mavenJava", MavenPublication) {
+		create('mavenJava', MavenPublication) {
+			artifactId = modId
 			from components.java
 		}
-	}
-
-	repositories {
 	}
 }

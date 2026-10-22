@@ -1,7 +1,7 @@
 package com.viewportcam.client.mixin;
 
-import com.viewportcam.client.ViewportCam;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.viewportcam.client.ViewportCam;
 import net.minecraft.client.renderer.ScreenEffectRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.resources.Identifier;
@@ -10,18 +10,22 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * 玩家身体跟随相机时，头部其实在相机位置（可能在方块内部），
- * 此时应屏蔽“卡在方块里”的遮挡贴图，否则屏幕会被糊住。
- */
 @Mixin(ScreenEffectRenderer.class)
 public class ScreenEffectRendererMixin {
 
-	@Inject(method = "submitBlockSprite", at = @At("HEAD"), cancellable = true)
-	private static void viewportcam$hideInWallOverlay(Identifier atlasLocation, float u0, float v0, float u1, float v1,
-			PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int color, CallbackInfo ci) {
-		if (ViewportCam.shouldHideInWallOverlay()) {
-			ci.cancel();
-		}
-	}
+    @Inject(method = "submitBlockSprite", at = @At("HEAD"), cancellable = true)
+    private static void viewportcam$hideInWallOverlay(
+            Identifier atlasLocation,
+            float u0,
+            float v0,
+            float u1,
+            float v1,
+            PoseStack poseStack,
+            SubmitNodeCollector submitNodeCollector,
+            int color,
+            CallbackInfo ci) {
+        if (ViewportCam.shouldHideInWallOverlay()) {
+            ci.cancel();
+        }
+    }
 }

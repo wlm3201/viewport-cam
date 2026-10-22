@@ -1,6 +1,6 @@
 # ViewportCam · 建模视图
 
-[简体中文](README.md) · [English](README_EN.md)
+[English](README.en.md) | 简体中文
 
 Minecraft Fabric 客户端mod，新增类似建模软件的的操作视图，可以用鼠标拖动平移、环绕旋转和滚轮缩放相机，并释放准星让其在屏幕内自由移动，可无需转动视角交互屏幕内任意方块，支持一键缩放变焦以精准操作。
 
@@ -35,10 +35,3 @@ Minecraft Fabric 客户端mod，新增类似建模软件的的操作视图，可
 - 交互：方块距离、实体距离
 - 单人：距离同步、本体跟随
 - 信息：状态栏、X/Y 坐标
-
-## 构建
-
-```powershell
-.\gradlew.bat build                 # 构建三个版本
-.\gradlew.bat :v26_2:runClient      # 运行某个版本
-```

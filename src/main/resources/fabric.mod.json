@@ -3,23 +3,17 @@
 	"id": "viewportcam",
 	"version": "${version}",
 	"name": "ViewportCam",
-	"description": "类似建模软件的环绕视角，相机脱离身体绕轴心旋转/平移/缩放，并释放鼠标以在屏幕中自由移动准星。",
-	"authors": [
-		"wlm3201"
-	],
-	"license": "CC0-1.0",
+	"description": "A modelling-tool style orbit camera: the camera leaves the body to orbit, pan and zoom around a pivot, and frees the crosshair so it can move anywhere on screen.",
+	"authors": ["wlm3201"],
+	"contact": {
+		"sources": "https://github.com/wlm3201/viewport-cam"
+	},
+	"license": "MIT",
 	"icon": "assets/viewportcam/icon.png",
 	"environment": "client",
 	"entrypoints": {
-		"main": [
-			"com.viewportcam.ViewportCamMod"
-		],
-		"client": [
-			"com.viewportcam.client.ViewportCamClient"
-		],
-		"modmenu": [
-			"com.viewportcam.client.config.ModMenuIntegration"
-		]
+		"client": ["com.viewportcam.client.ViewportCamClient"],
+		"modmenu": ["com.viewportcam.client.config.ModMenuIntegration"]
 	},
 	"mixins": [
 		{
@@ -27,14 +21,14 @@
 			"environment": "client"
 		}
 	],
-	"suggests": {
-		"yet-another-config-lib": "*",
-		"modmenu": "*"
-	},
 	"depends": {
 		"fabricloader": ">=0.19.5",
-		"minecraft": "${minecraft_dependency}",
 		"java": ">=25",
+		"minecraft": "${minecraft_dependency}",
 		"fabric-api": "*"
+	},
+	"suggests": {
+		"modmenu": "*",
+		"yet_another_config_lib_v3": "*"
 	}
 }
